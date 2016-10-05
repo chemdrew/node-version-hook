@@ -1,0 +1,21 @@
+#!/bin/bash
+
+BRANCHPATH=$(git symbolic-ref -q HEAD)
+BRANCH="${BRANCHPATH##*/}"
+
+if [ "master" == "$BRANCH" ]; then
+    CHANGES=$(git diff HEAD package.json)
+    VERSION1=$(echo $CHANGES | sed -e 's/.*"version".*"\(.*\)".*"version".*/\1/')
+    VERSION2=$(echo $CHANGES | sed -e 's/.*"version.*"\(.*\)".*/\1/')
+    V1=$(echo "$VERSION1" | sed -e 's/\.//g')
+    V2=$(echo "$VERSION2" | sed -e 's/\.//g')
+    if [ -n "$V1" ] && [ -n "$V2" ] && [ $V2 -gt $V1 ]; then
+        echo "GOOD JOB"
+        # exit 0
+    fi
+fi
+
+echo -e "\033[0;31mupdate the application version in package.json before commiting to master\033[0m"
+exit 1
+
+echo "don't forget to check when merging from one branch to another... $2"
