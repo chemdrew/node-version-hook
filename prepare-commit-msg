@@ -10,12 +10,12 @@ if [ "master" == "$BRANCH" ]; then
     V1=$(echo "$VERSION1" | sed -e 's/\.//g')
     V2=$(echo "$VERSION2" | sed -e 's/\.//g')
     if [ -n "$V1" ] && [ -n "$V2" ] && [ $V2 -gt $V1 ]; then
-        echo "GOOD JOB"
-        # exit 0
+        exit 0
     fi
+    echo -e "\033[0;31mupdate the application version in package.json before commiting to master\033[0m"
+    exit 1
 fi
 
-echo -e "\033[0;31mupdate the application version in package.json before commiting to master\033[0m"
-exit 1
+exit 0
 
 echo "don't forget to check when merging from one branch to another... $2"
